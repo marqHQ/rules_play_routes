@@ -61,3 +61,37 @@ def generate_play_routes_compiler_targets(scala_version):
         ],
         srcs = ["Foo.java"],
     )
+
+def generate_play_2_7_play_routes_compiler_targets():
+    repository = "@play_routes_compiler_cli_2_13_play_2_7"
+    scala_library_target = "{}//:org_scala_lang_scala_library".format(repository)
+
+    scala_library(
+        name = "play-routes-compiler-lib-2-13-play-2-7",
+        srcs = native.glob(["play-2-7/*.scala"]),
+        scalacopts = ["-Xfatal-warnings"],
+        visibility = ["//visibility:public"],
+        deps_used_whitelist = [
+            scala_library_target,
+            "{}//:com_google_protobuf_protobuf_java".format(repository),
+        ],
+        deps = [
+            scala_library_target,
+            "//third_party/bazel/src/java_tools/buildjar/java/com/google/devtools/build/buildjar/jarhelper",
+            "{}//:com_github_scopt_scopt_2_13".format(repository),
+            "{}//:com_google_protobuf_protobuf_java".format(repository),
+            "{}//:com_typesafe_play_routes_compiler_2_13".format(repository),
+            "@rules_scala_annex//src/main/scala/higherkindness/rules_scala/common/error",
+            "@rules_scala_annex//src/main/scala/higherkindness/rules_scala/common/interrupt",
+            "@rules_scala_annex//src/main/scala/higherkindness/rules_scala/common/sandbox",
+            "@rules_scala_annex//src/main/scala/higherkindness/rules_scala/common/worker",
+        ],
+        scala_toolchain_name = "zinc_2_13",
+    )
+
+    java_binary(
+        name = "play-routes-compiler-cli-2-13-play-2-7",
+        main_class = "rulesplayroutes.routes.CommandLinePlayRoutesCompiler",
+        visibility = ["//visibility:public"],
+        runtime_deps = [":play-routes-compiler-lib-2-13-play-2-7"],
+    )

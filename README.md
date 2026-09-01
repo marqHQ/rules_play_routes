@@ -40,7 +40,9 @@ archive_override(
 
 By default, the Scala 3 version of the Play routes compiler will be used. To change the default to
 Scala 2.13, add the `--@rules_play_routes//play-routes-toolchain=play-routes-2-13` flag to your
-`.bazelrc` file.
+`.bazelrc` file. Projects still on Play 2.7 want
+`--@rules_play_routes//play-routes-toolchain=play-routes-2-13-play-2-7`, which runs the Play 2.7 era
+`com.typesafe.play` routes compiler.
 
 If you want to use a custom Play routes compiler, you can set up a custom toolchain like so:
 
@@ -101,8 +103,8 @@ scala_binary(
 To override the default Play routes compiler for a single target, you can change the
 `play_routes_toolchain_name` attribute on the `play_routes` target. That attribute can be set to
 the name of any `play_routes_toolchain` registered with `play_routes_register_toolchains` (and
-created using `create_play_routes_toolchain`). By default `play-routes-3` and `play-routes-2-13` are
-valid values.
+created using `create_play_routes_toolchain`). By default `play-routes-3`, `play-routes-2-13` and
+`play-routes-2-13-play-2-7` are valid values.
 
 For example:
 ```starlark
