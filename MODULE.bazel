@@ -40,6 +40,13 @@ play_version = "3.0.4"
 # `routes-compiler_2.13`.
 play_2_7_routes_compiler_version = "2.7.3"
 
+play_2_7_version = "2.7.4"
+
+# The Play 2.7 test helpers are built against specs2 4.x
+play_2_7_specs2_version = "4.8.0"
+
+play_2_7_guice_version = "6.0.0"
+
 # Please ensure these stay up-to-date with the versions in `scala/version.bzl`. Unfortunately,
 # `MODULE.bazel` files can't call `load`, so we have to copy them here.
 scala_2_13_version = "2.13.14"
@@ -164,6 +171,27 @@ play_routes_test_2_13.install(
     repositories = play_routes_test_repositories,
 )
 use_repo(play_routes_test_2_13, "play_routes_test_2_13")
+
+play_routes_test_2_13_play_2_7 = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+play_routes_test_2_13_play_2_7.install(
+    name = "play_routes_test_2_13_play_2_7",
+    artifacts = [
+        # Play 2.7 resolves Guice 4.2.2, whose bytecode generation fails on the JDK the tests
+        # run on
+        "com.google.inject:guice:{}".format(play_2_7_guice_version),
+        "com.typesafe.play:play_2.13:{}".format(play_2_7_version),
+        "com.typesafe.play:play-specs2_2.13:{}".format(play_2_7_version),
+        "com.typesafe.play:play-test_2.13:{}".format(play_2_7_version),
+        "org.specs2:specs2-common_2.13:{}".format(play_2_7_specs2_version),
+        "org.specs2:specs2-core_2.13:{}".format(play_2_7_specs2_version),
+        "org.specs2:specs2-matcher_2.13:{}".format(play_2_7_specs2_version),
+    ],
+    fail_if_repin_required = True,
+    fetch_sources = True,
+    lock_file = "@rules_play_routes//:play_routes_test_2_13_play_2_7_install.json",
+    repositories = play_routes_test_repositories,
+)
+use_repo(play_routes_test_2_13_play_2_7, "play_routes_test_2_13_play_2_7")
 
 play_routes_test_3 = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 play_routes_test_3.install(

@@ -5,8 +5,10 @@ set -euxo pipefail
 function clean_build_output_hash {
   bazel clean
   bazel build test:play-routes-3
-  # Take the hash of all files in the directory; this needs to work in both Linux and OSX
-  for file in $(find bazel-bin/ -type f | sort); do shasum $file; done | shasum
+  bazel build test:play-routes-2-13-play-2-7
+  # The Play routes toolchain transition gives each toolchain its own output directory, so the
+  # generated sources are collected from all of them; this needs to work in both Linux and OSX
+  for file in $(find bazel-out/*/bin/test/play_routes_* -type f | sort); do shasum $file; done | shasum
 }
 
 hash0=$(clean_build_output_hash)
