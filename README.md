@@ -58,6 +58,11 @@ create_play_routes_toolchain(
 )
 ```
 
+Projects still on Play 2.7 can register
+`@rules_play_routes//play-routes-toolchain:play-routes-2-13-play-2-7` in their root `MODULE.bazel`.
+It runs the Play 2.7 era `com.typesafe.play` routes compiler and, registered by the root module,
+takes precedence over `play-routes-2-13`.
+
 If you register more than one custom toolchain for the same `scala_version`, set the `prefix`
 attribute to disambiguate them, e.g., `prefix = "custom"` on the Play routes toolchain and
 `scala_version = "custom_3"` on the `play_routes` target.
